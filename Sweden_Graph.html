@@ -3,7 +3,7 @@
 <style>
 	.line {
 		fill: none;
-		stroke: #C70039;
+		stroke: #FFC300;
 		stroke-width: 3px;
 	}
 </style>
@@ -36,7 +36,7 @@
 		.y(function(d) {return y(d.Value);});
 
 	// Load Data
-	d3.csv("Country_Data/Greece.csv", function(error, real_data) {
+	d3.csv("Country_Data/Sweden.csv", function(error, real_data) {
 		if (error) throw error;
 
 		real_data.forEach(function(d) {
@@ -62,7 +62,7 @@
 		svg.append("text")
 			.attr("transform", "translate(" + (width/2) + ", -10)")
 			.style("text-anchor", "middle")
-			.text("Syrian Refugee Applications in Greece");	
+			.text("Syrian Refugee Applications in Sweden");	
 
 		// X-Axis
 		svg.append("g")

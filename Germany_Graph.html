@@ -3,7 +3,7 @@
 <style>
 	.line {
 		fill: none;
-		stroke: green;
+		stroke: #581845;
 		stroke-width: 3px;
 	}
 </style>
@@ -14,48 +14,60 @@
 
 	<script>
 
-	// Define dimensions for graph
-	var margin = {top: 30, right: 20, bottom: 30, left: 50}, 
-		width = 450 - margin.left - margin.right,
-		height = 270 - margin.top - margin.bottom;
+	// Define Dimensions for Graph
+	var margin = {top: 40, right: 30, bottom: 30, left: 60}, 
+		width = 400 - margin.left - margin.right,
+		height = 300 - margin.top - margin.bottom;
 
-	// Define Domain and Range
+	// Define Range for X and Y Axes
 	var x = d3.scaleLinear().range([0, width]);
 	var y = d3.scaleLinear().range([height, 0]);
 
-	// Defining the Line
-	var applicantLine = d3.line()
-		.x(function(d) {return x(d.Year);})
-		.y(function(d) {return y(d.Value);});
-
+	// Create the SVG Object
 	var svg = d3.select("body").append("svg")
 			.attr("width", width + margin.left + margin.right)
 			.attr("height", height + margin.top + margin.bottom)
 		.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top +")");
 
+	// Defining the Line
+	var applicantLine = d3.line()
+		.x(function(d) {return x(d.Year);})
+		.y(function(d) {return y(d.Value);});
+
 	// Load Data
-	d3.csv("Germany.csv", function(error, data) {
+	d3.csv("Country_Data/Germany.csv", function(error, real_data) {
 		if (error) throw error;
 
-		data.forEach(function(d) {
+		real_data.forEach(function(d) {
 			d.Year = d.Year;
 			d.Value = +d.Value;
 
 		})
 
-		x.domain(d3.extent(data, function(d) {return d.Year;}));
-		y.domain([0, d3.max(data, function(d) {return d.Value})]);
+		x.domain(d3.extent(real_data, function(d) 
+			{return d.Year;})
+		);
+
+		y.domain([0, d3.max(real_data, function(d) 
+			{return d.Value})]
+		);
 
 		svg.append("path")
-			.data([data])
+			.data([real_data])
 			.attr("class", "line")
 			.attr("d", applicantLine);
+
+		// Title	
+		svg.append("text")
+			.attr("transform", "translate(" + (width/2) + ", -10)")
+			.style("text-anchor", "middle")
+			.text("Syrian Refugee Applications in Germany");	
 
 		// X-Axis
 		svg.append("g")
 			.attr("transform", "translate(0," + height + ")")
-			.call(d3.axisBottom(x));
+			.call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
 		svg.append("text")
 			.attr("transform", "translate(" + (width/2) + ", " + (height + margin.bottom) + ")")
@@ -72,6 +84,7 @@
 			.attr("x", 0-(height/2))
 			.style("text-anchor", "middle")
 			.text("Normalized Number of Applications");
+
 
 	});
 

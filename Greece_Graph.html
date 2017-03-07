@@ -3,7 +3,7 @@
 <style>
 	.line {
 		fill: none;
-		stroke: black;
+		stroke: green;
 		stroke-width: 3px;
 	}
 </style>
@@ -16,12 +16,11 @@
 
 	// Define dimensions for graph
 	var margin = {top: 30, right: 20, bottom: 30, left: 50}, 
-		width = 600 - margin.left - margin.right,
+		width = 450 - margin.left - margin.right,
 		height = 270 - margin.top - margin.bottom;
 
-
 	// Define Domain and Range
-	var x = d3.scaleTime().range([0, width]);
+	var x = d3.scaleLinear().range([0, width]);
 	var y = d3.scaleLinear().range([height, 0]);
 
 	// Defining the Line
@@ -36,12 +35,13 @@
 			.attr("transform", "translate(" + margin.left + "," + margin.top +")");
 
 	// Load Data
-	d3.csv("Germany_Data.csv", function(error, data) {
+	d3.csv("Greece.csv", function(error, data) {
 		if (error) throw error;
 
 		data.forEach(function(d) {
 			d.Year = d.Year;
 			d.Value = +d.Value;
+
 		})
 
 		x.domain(d3.extent(data, function(d) {return d.Year;}));
@@ -52,12 +52,26 @@
 			.attr("class", "line")
 			.attr("d", applicantLine);
 
+		// X-Axis
 		svg.append("g")
 			.attr("transform", "translate(0," + height + ")")
 			.call(d3.axisBottom(x));
 
+		svg.append("text")
+			.attr("transform", "translate(" + (width/2) + ", " + (height + margin.bottom) + ")")
+			.style("text-anchor", "middle")
+			.text("Year");
+
+		// Y-Axis
 		svg.append("g") 
 			.call(d3.axisLeft(y));
+
+		svg.append("text")
+			.attr("transform", "rotate(270)")
+			.attr("y", -30)
+			.attr("x", 0-(height/2))
+			.style("text-anchor", "middle")
+			.text("Normalized Number of Applications");
 
 	});
 
